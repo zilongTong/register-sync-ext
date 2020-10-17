@@ -1,1 +1,1 @@
-# nacos-sync-ex
+# register-sync-extends
