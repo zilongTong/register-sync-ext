@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+
+    <define name="appId" class="org.polaris.nacos.logger.component.common.AppIdDefiner" />
+
+    <springProperty scope="context" name="springAppName" source="spring.application.name"/>
+
+    <!-- log maxFileSize -->
+    <springProperty scope="context" name="MAX_FILE_SIZE" source="spring.logback.max-file-size" defaultValue="100MB"/>
+
+    <!-- log maxIndex -->
+    <springProperty scope="context" name="MAX_INDEX" source="spring.logback.max-index" defaultValue="5"/>
+
+    <conversionRule conversionWord="hostAddress" converterClass="org.polaris.nacos.logger.component.common.HostAddressConvert" />
+
+    <!-- log base path -->
+    <property name="LOG_HOME" value="/opt/logs/${appId}/applog"/>
+
+    <!--INFO输出格式-->
+    <property name="INFO_PATTERN" value='{
+                        "host": "%hostAddress",
+                        "time": "%d{yyyy-MM-dd HH:mm:ss.SSSZ}",
+                        "service": "${springAppName:-}",
+                        "level": "%level",
+                        "class": "%logger",
+                        "message": "%message%n%exception{10}"
+                        }'/>
+
+    <!--WARN输出格式-->
+    <property name="WARN_PATTERN" value='{
+                        "host": "%hostAddress",
+                        "time": "%d{yyyy-MM-dd HH:mm:ss.SSSZ}",
+                        "service": "${springAppName:-}",
+                        "level": "%level",
+                        "class": "%logger",
+                        "message": "%message%n%exception{10}"
+                        }'/>
+
+    <!--ERROR输出格式-->
+    <property name="ERROR_PATTERN" value='{
+                        "host": "%hostAddress",
+                        "time": "%d{yyyy-MM-dd HH:mm:ss.SSSZ}",
+                        "service": "${springAppName:-}",
+                        "level": "%level",
+                        "class": "%logger",
+                        "message": "%message%n%exception{10}"
+                        }'/>
+
+    <include resource="logback/error-appender.xml"/>
+    <include resource="logback/info-appender.xml"/>
+    <include resource="logback/warn-appender.xml"/>
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg %n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.alibaba.nacossync" level="INFO"/>
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="INFO"/>
+    <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="INFO"/>
+    <logger name="org.hibernate.SQL" level="INFO"/>
+    <logger name="org.hibernate.engine.QueryParameters" level="INFO"/>
+    <logger name="org.hibernate.engine.query.HQLQueryPlan" level="INFO"/>
+
+    <!-- 日志输出级别 -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="BASE-FILE-INFO"/>
+        <appender-ref ref="BASE-FILE-WARN"/>
+        <appender-ref ref="BASE-FILE-ERROR"/>
+    </root>
+
+</configuration>
